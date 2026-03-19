@@ -8,7 +8,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(npm install)",
+      "Bash(npx aiox-core install)",
+      "Bash(git remote set-url origin https://github.com/Pedrobrusi/PROJETO-AGENTES-PAULINO.git)"
     ]
   }
 }
