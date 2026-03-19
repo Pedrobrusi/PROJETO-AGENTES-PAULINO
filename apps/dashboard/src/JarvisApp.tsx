@@ -7,11 +7,13 @@ import { ProjectPreview } from '@/components/ProjectPreview'
 import { useAgentStore } from '@/stores/agentStore'
 import { useProjectStore, initializeDemoProjects } from '@/stores/projectStore'
 import { useSpeechSynthesis } from '@/hooks/useSpeechSynthesis'
+import { useWebSearch } from '@/hooks/useWebSearch'
 import '@/styles/jarvis.css'
 
 function JarvisApp() {
   const [activeView, setActiveView] = useState<'orchestrator' | 'agents' | 'tasks' | 'search' | 'preview'>('orchestrator')
-  const { agents, selectedAgent, activeConversation, selectAgent, sendMessage } = useAgentStore()
+  const { agents, selectedAgent, activeConversation, selectAgent, sendMessage, setWebSearchFunction } = useAgentStore()
+  const { search } = useWebSearch()
   const { speak } = useSpeechSynthesis()
 
   const jarvisAgent = agents.find(a => a.id === 'jarvis')
@@ -22,6 +24,11 @@ function JarvisApp() {
   useEffect(() => {
     initializeDemoProjects()
   }, [])
+
+  // Set web search function for orchestration
+  useEffect(() => {
+    setWebSearchFunction(search)
+  }, [search, setWebSearchFunction])
 
   // Auto-select JARVIS on mount
   useEffect(() => {

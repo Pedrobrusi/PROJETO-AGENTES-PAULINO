@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { Agent, Message, Conversation, AgentTask } from '@/types/agent'
 import { agents as initialAgents } from '@/data/agents'
+import { analyzeRequest, generateOrchestrationResponse, executeTask } from '@/services/orchestration'
 
 interface AgentStore {
   agents: Agent[]
@@ -8,6 +9,7 @@ interface AgentStore {
   conversations: Conversation[]
   activeConversation: Conversation | null
   tasks: AgentTask[]
+  webSearchFunction?: (query: string) => Promise<any[]>
 
   // Actions
   selectAgent: (agentId: string) => void
@@ -16,6 +18,7 @@ interface AgentStore {
   updateAgentStatus: (agentId: string, status: Agent['status']) => void
   addTask: (task: Omit<AgentTask, 'id' | 'createdAt' | 'updatedAt'>) => void
   updateTask: (taskId: string, updates: Partial<AgentTask>) => void
+  setWebSearchFunction: (fn: (query: string) => Promise<any[]>) => void
 }
 
 export const useAgentStore = create<AgentStore>((set, get) => ({
@@ -76,7 +79,97 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
     // Update agent status
     get().updateAgentStatus(agentId, 'busy')
 
-    // Simulate agent response (in a real app, this would call the AIOX CLI)
+    // JARVIS ORCHESTRATION LOGIC
+    if (agentId === 'jarvis') {
+      // Analyze request and create orchestration plan
+      const orchestrationTask = analyzeRequest(content, get().agents)
+
+      // Send orchestration response immediately
+      const orchestrationResponse = generateOrchestrationResponse(orchestrationTask)
+
+      const orchestrationMessage: Message = {
+        id: crypto.randomUUID(),
+        agentId: 'jarvis',
+        content: orchestrationResponse,
+        timestamp: new Date(),
+        type: 'agent',
+        status: 'completed'
+      }
+
+      set(state => {
+        const conversation = state.activeConversation
+        if (conversation) {
+          return {
+            activeConversation: {
+              ...conversation,
+              messages: [
+                ...conversation.messages.map(m =>
+                  m.id === userMessage.id ? { ...m, status: 'completed' as const } : m
+                ),
+                orchestrationMessage
+              ],
+              updatedAt: new Date()
+            },
+            conversations: state.conversations.map(c =>
+              c.id === conversation.id
+                ? {
+                    ...conversation,
+                    messages: [
+                      ...conversation.messages.map(m =>
+                        m.id === userMessage.id ? { ...m, status: 'completed' as const } : m
+                      ),
+                      orchestrationMessage
+                    ]
+                  }
+                : c
+            )
+          }
+        }
+        return state
+      })
+
+      // Execute task asynchronously
+      setTimeout(async () => {
+        const executionResult = await executeTask(
+          orchestrationTask,
+          get().webSearchFunction
+        )
+
+        const resultMessage: Message = {
+          id: crypto.randomUUID(),
+          agentId: 'jarvis',
+          content: executionResult,
+          timestamp: new Date(),
+          type: 'agent',
+          status: 'completed'
+        }
+
+        set(state => {
+          const conversation = state.activeConversation
+          if (conversation) {
+            return {
+              activeConversation: {
+                ...conversation,
+                messages: [...conversation.messages, resultMessage],
+                updatedAt: new Date()
+              },
+              conversations: state.conversations.map(c =>
+                c.id === conversation.id
+                  ? { ...conversation, messages: [...conversation.messages, resultMessage] }
+                  : c
+              )
+            }
+          }
+          return state
+        })
+
+        get().updateAgentStatus('jarvis', 'active')
+      }, 2000)
+
+      return
+    }
+
+    // Normal agent response (non-JARVIS)
     setTimeout(() => {
       const agent = get().agents.find(a => a.id === agentId)
       const agentMessage: Message = {
@@ -194,5 +287,9 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
           : t
       )
     }))
+  },
+
+  setWebSearchFunction: (fn: (query: string) => Promise<any[]>) => {
+    set({ webSearchFunction: fn })
   }
 }))
