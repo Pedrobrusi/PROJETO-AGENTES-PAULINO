@@ -2,8 +2,9 @@ import { create } from 'zustand'
 import type { Agent, Message, Conversation, AgentTask } from '@/types/agent'
 import { agents as initialAgents } from '@/data/agents'
 import { analyzeRequest, generateOrchestrationResponse, executeTask } from '@/services/orchestration'
-import { generatePizzaApp, type ProjectStructure } from '@/services/agentActions'
+import { generatePizzaApp, generateStitchApp, type ProjectStructure } from '@/services/agentActions'
 import { createProjectViaBash } from '@/services/fileWriter'
+import { useProjectStore } from '@/stores/projectStore'
 
 // Helper to execute bash commands (in real environment, this would use actual bash)
 async function executeBashCommand(command: string): Promise<{ stdout: string; stderr: string }> {
@@ -189,7 +190,8 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
 
             // Check if this is a request to build an app
             const isPizzaAppRequest = /pizza|pizzaria|pizzeria/i.test(message)
-            const isAppBuildRequest = /criar|build|create|desenvolv|implement|app|aplicat/i.test(message)
+            const isStitchRequest = /stitch|interface|tela|ui/i.test(message)
+            const isAppBuildRequest = /criar|build|create|desenvolv|implement|app|aplicat|faça/i.test(message)
 
             let agentResponse = `**[${targetAgent?.persona}]**\n\n`
             agentResponse += `✅ Task acknowledged and processed.\n\n`
@@ -290,6 +292,30 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
                 agentResponse += `⚠️ **Note:** Running in browser environment - files generated but not written to disk automatically.\n\n`
                 agentResponse += `To create the project, copy the files shown above or use the download feature.\n\n`
               }
+            } else if (targetAgentId === 'dev' && isStitchRequest && isAppBuildRequest) {
+              agentResponse += `**🪄 GERANDO UI COM STITCH MCP**\n\n`
+              agentResponse += `Estou utilizando a integração com o Google Stitch para gerar a interface solicitada.\n`
+              agentResponse += `**Prompt:** "${message}"\n\n`
+              agentResponse += `**Features:**\n`
+              agentResponse += `✅ Layout responsivo\n`
+              agentResponse += `✅ Estilização via Tailwind CSS\n`
+              agentResponse += `✅ Ícones Lucide React\n\n`
+              
+              const stitchProject = generateStitchApp(message)
+              agentResponse += `**📁 Arquivos Gerados: ${stitchProject.files.length}**\n\n`
+              agentResponse += `\`\`\`\n`
+              stitchProject.files.forEach(file => {
+                agentResponse += `${file.path}\n`
+              })
+              agentResponse += `\`\`\`\n\n`
+              
+              const newProj = useProjectStore.getState().createProject(targetAgentId, stitchProject.name)
+              stitchProject.files.forEach(file => {
+                 useProjectStore.getState().addFile(newProj.id, { name: file.path, content: file.content, type: file.type as any, agentId: targetAgentId })
+              })
+
+              agentResponse += `**✅ Interface importada! Abra o Live Preview para visualizar.**`
+              
             } else if (targetAgentId === 'dev') {
               agentResponse += `**My Analysis:**\n`
               agentResponse += `- Reviewing code requirements\n`

@@ -21,6 +21,131 @@ export interface ProjectStructure {
   dependencies?: Record<string, string>
 }
 
+// Generate an app based on a prompt (simulated Stitch behaviour)
+export function generateStitchApp(prompt: string): ProjectStructure {
+  const isDark = prompt.toLowerCase().includes('dark')
+  const bgColor = isDark ? 'bg-slate-900' : 'bg-slate-50'
+  const textColor = isDark ? 'text-white' : 'text-slate-900'
+  const cardBg = isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
+
+  return {
+    name: 'stitch-generated-app',
+    description: `Generated UI for: ${prompt}`,
+    dependencies: {
+      'react': '^18.2.0',
+      'lucide-react': '^0.263.1',
+      'tailwindcss': '^3.3.0'
+    },
+    files: [
+      {
+        path: 'src/App.tsx',
+        type: 'typescript',
+        content: `import React from 'react'
+import { Layout, Palette, Zap, Sparkles } from 'lucide-react'
+
+export default function App() {
+  return (
+    <div className="min-h-screen ${bgColor} ${textColor} font-sans transition-colors duration-300">
+      <header className="px-8 py-6 border-b ${isDark ? 'border-slate-800' : 'border-slate-200'} flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Sparkles className="text-purple-500" />
+          <h1 className="text-xl font-bold tracking-tight">AI Generated UI</h1>
+        </div>
+        <nav className="flex gap-4 text-sm font-medium">
+          <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">Features</a>
+          <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">Pricing</a>
+          <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">Contact</a>
+        </nav>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-8 py-20 text-center">
+        <span className="inline-block py-1 px-3 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-600 mb-6 border border-purple-500/20">
+          Powered by Google Stitch
+        </span>
+        <h2 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">
+          Your Interface,<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">
+            Generated Instantly
+          </span>
+        </h2>
+        <p className="text-lg opacity-70 mb-10 max-w-2xl mx-auto leading-relaxed">
+          Based on your prompt: "${prompt}".
+          This is a responsive, modern interface built with React, Tailwind CSS, and Lucide Icons.
+        </p>
+
+        <div className="flex items-center justify-center gap-4">
+          <button className="px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-medium transition-colors">
+            Get Started
+          </button>
+          <button className="${cardBg} border px-6 py-3 rounded-lg font-medium hover:opacity-80 transition-opacity">
+            View Source
+          </button>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 mt-24 text-left">
+          <div className="${cardBg} border rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
+              <Layout className="text-blue-500" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Beautiful Layout</h3>
+            <p className="opacity-70 text-sm leading-relaxed">Generated exactly according to best practices and responsive design principles.</p>
+          </div>
+          <div className="${cardBg} border rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4">
+              <Palette className="text-purple-500" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Modern Styling</h3>
+            <p className="opacity-70 text-sm leading-relaxed">Using Tailwind CSS utility classes to achieve an elegant and flexible design system.</p>
+          </div>
+          <div className="${cardBg} border rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center mb-4">
+              <Zap className="text-green-500" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Production Ready</h3>
+            <p className="opacity-70 text-sm leading-relaxed">Optimized components ready to be customized and integrated into your application.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
+`
+      },
+      {
+        path: 'src/main.tsx',
+        type: 'typescript',
+        content: `import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+`
+      },
+      {
+        path: 'index.html',
+        type: 'html',
+        content: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stitch Generated UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`
+      }
+    ]
+  }
+}
+
 // Generate a complete React + TypeScript pizza delivery app
 export function generatePizzaApp(): ProjectStructure {
   return {

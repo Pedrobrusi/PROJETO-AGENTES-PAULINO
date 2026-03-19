@@ -4,7 +4,7 @@ import { Monitor, Code, Eye, EyeOff, Maximize2, Minimize2, RotateCcw, Download }
 interface ProjectFile {
   name: string
   content: string
-  type: 'html' | 'css' | 'js'
+  type: 'html' | 'css' | 'js' | 'tsx' | 'ts'
 }
 
 interface ProjectPreviewProps {
