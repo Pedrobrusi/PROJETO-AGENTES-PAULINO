@@ -1,7 +1,7 @@
 metadata:
   version: 1.0.0
-  lastUpdated: '2026-03-11T00:48:55.982Z'
-  entityCount: 745
+  lastUpdated: '2026-03-19T01:57:43.436Z'
+  entityCount: 746
   checksumAlgorithm: sha256
   resolutionRate: 100
 entities:
@@ -13601,26 +13601,40 @@ entities:
       checksum: sha256:5ca4ec06aaf8525668303f8bdef9c5bc868b1f084db905e8b7636c974c2faa94
       lastVerified: '2026-03-11T00:48:55.919Z'
     MEMORY:
-      path: .aiox-core/development/agents/analyst/MEMORY.md
+      path: .aiox-core/development/agents/jarvis/MEMORY.md
       layer: L3
       type: agent
-      purpose: Analyst Agent Memory (Atlas)
+      purpose: JARVIS Agent Memory
       keywords:
         - memory
-        - analyst
+        - jarvis
         - agent
-        - (atlas)
       usedBy: []
       dependencies: []
-      externalDeps: []
-      plannedDeps: []
-      lifecycle: orphan
       adaptability:
         score: 0.3
         constraints: []
         extensionPoints: []
-      checksum: sha256:b8b52820ba1929ba12403fc437868dd9e8a9c2532abe99296ad05864618693b0
-      lastVerified: '2026-03-11T00:48:55.919Z'
+      checksum: sha256:ebac1080f74a37950cb014385345e88f26a4a8305de2b78183475335af1906eb
+      lastVerified: '2026-03-19T01:57:43.429Z'
+    jarvis:
+      path: .aiox-core/development/agents/jarvis.md
+      layer: L2
+      type: agent
+      purpose: 'Agent: JARVIS - AI Orchestration System'
+      keywords:
+        - jarvis
+        - 'agent:'
+        - orchestration
+        - system
+      usedBy: []
+      dependencies: []
+      adaptability:
+        score: 0.3
+        constraints: []
+        extensionPoints: []
+      checksum: sha256:e7cb264932c8a59787e7e995e6b1792781418821f4e9ffb83ea4ae4e691e1ecd
+      lastVerified: '2026-03-19T01:57:43.423Z'
   checklists:
     agent-quality-gate:
       path: .aiox-core/development/checklists/agent-quality-gate.md

@@ -1,18 +1,27 @@
 import { useState, useEffect } from 'react'
-import { Bot, Zap, Activity, Network } from 'lucide-react'
+import { Bot, Zap, Activity, Network, Search, Monitor } from 'lucide-react'
 import { VoiceControl } from '@/components/VoiceControl'
 import { ChatPanel } from '@/components/ChatPanel'
+import { SearchPanel } from '@/components/SearchPanel'
+import { ProjectPreview } from '@/components/ProjectPreview'
 import { useAgentStore } from '@/stores/agentStore'
+import { useProjectStore, initializeDemoProjects } from '@/stores/projectStore'
 import { useSpeechSynthesis } from '@/hooks/useSpeechSynthesis'
 import '@/styles/jarvis.css'
 
 function JarvisApp() {
-  const [activeView, setActiveView] = useState<'orchestrator' | 'agents' | 'tasks'>('orchestrator')
+  const [activeView, setActiveView] = useState<'orchestrator' | 'agents' | 'tasks' | 'search' | 'preview'>('orchestrator')
   const { agents, selectedAgent, activeConversation, selectAgent, sendMessage } = useAgentStore()
   const { speak } = useSpeechSynthesis()
 
   const jarvisAgent = agents.find(a => a.id === 'jarvis')
   const otherAgents = agents.filter(a => a.id !== 'jarvis')
+  const { activeProject, getProjectByAgent } = useProjectStore()
+
+  // Initialize demo projects on mount
+  useEffect(() => {
+    initializeDemoProjects()
+  }, [])
 
   // Auto-select JARVIS on mount
   useEffect(() => {
@@ -23,6 +32,9 @@ function JarvisApp() {
       }, 500)
     }
   }, [jarvisAgent, selectedAgent, selectAgent, speak])
+
+  // Get current project for selected agent
+  const currentProject = selectedAgent ? getProjectByAgent(selectedAgent.id) : activeProject
 
   const handleVoiceCommand = (command: string) => {
     console.log('Voice command:', command)
@@ -139,6 +151,34 @@ function JarvisApp() {
                 >
                   <Activity size={20} />
                   <span>Task Monitor</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveView('search')}
+                  className={`
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    ${activeView === 'search'
+                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
+                      : 'text-slate-400 hover:bg-slate-800/50'
+                    }
+                  `}
+                >
+                  <Search size={20} />
+                  <span>Web Search</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveView('preview')}
+                  className={`
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    ${activeView === 'preview'
+                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
+                      : 'text-slate-400 hover:bg-slate-800/50'
+                    }
+                  `}
+                >
+                  <Monitor size={20} />
+                  <span>Live Preview</span>
                 </button>
               </div>
 
@@ -268,6 +308,30 @@ function JarvisApp() {
                     Delegate tasks to agents through JARVIS
                   </p>
                 </div>
+              </div>
+            )}
+
+            {activeView === 'search' && (
+              <div className="jarvis-panel p-6 overflow-auto h-full">
+                <SearchPanel
+                  agentId={selectedAgent?.id}
+                  onResultSelect={(result) => {
+                    console.log('Search result selected:', result)
+                    if (selectedAgent) {
+                      sendMessage(selectedAgent.id, `Research this: ${result.title} - ${result.url}`)
+                    }
+                  }}
+                />
+              </div>
+            )}
+
+            {activeView === 'preview' && (
+              <div className="h-full">
+                <ProjectPreview
+                  agentId={selectedAgent?.id}
+                  files={currentProject?.files || []}
+                  autoRefresh={true}
+                />
               </div>
             )}
           </main>

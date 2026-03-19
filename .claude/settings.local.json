@@ -14,7 +14,9 @@
       "Bash(git remote set-url origin https://github.com/Pedrobrusi/PROJETO-AGENTES-PAULINO.git)",
       "Bash(npm run dev)",
       "Bash(timeout 5 bash -c 'while true; do sleep 1; done')",
-      "Bash(git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git ui-ux-temp)"
+      "Bash(git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git ui-ux-temp)",
+      "Bash(git rm --cached -r ui-ux-temp)",
+      "Bash(git rm --cached -rf ui-ux-temp)"
     ]
   }
 }
