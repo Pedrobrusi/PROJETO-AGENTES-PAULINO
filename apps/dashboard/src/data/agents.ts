@@ -2,6 +2,24 @@ import type { Agent } from '@/types/agent'
 
 export const agents: Agent[] = [
   {
+    id: 'jarvis',
+    name: 'J.A.R.V.I.S.',
+    persona: 'Master Orchestrator',
+    description: 'Just A Rather Very Intelligent System - Coordena todos os agentes',
+    expertise: ['Multi-Agent Coordination', 'Task Routing', 'Voice Interface', 'System Intelligence'],
+    commands: [
+      { name: '*help', description: 'Mostrar comandos disponíveis', usage: '*help' },
+      { name: '*status', description: 'Status do sistema e agentes', usage: '*status' },
+      { name: '*delegate', description: 'Delegar tarefa a agente', usage: '*delegate <agent> <task>' },
+      { name: '*workflow', description: 'Executar workflow multi-agente', usage: '*workflow <name>' },
+      { name: '*report', description: 'Gerar relatório de progresso', usage: '*report' },
+      { name: '*exit', description: 'Sair do modo agente', usage: '*exit' }
+    ],
+    color: '#0ea5e9',
+    icon: '🤖',
+    status: 'active'
+  },
+  {
     id: 'dev',
     name: 'Dex',
     persona: 'Developer',
