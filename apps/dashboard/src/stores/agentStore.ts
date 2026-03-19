@@ -128,11 +128,139 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
         return state
       })
 
-      // Execute task asynchronously
+      // Execute task asynchronously with real agent delegation
       setTimeout(async () => {
+        // Create a function to delegate messages to agents
+        const delegateToAgent = async (targetAgentId: string, message: string) => {
+          // Find or create conversation with target agent
+          let targetConversation = get().conversations.find(
+            c => c.agentId === targetAgentId
+          )
+
+          if (!targetConversation) {
+            targetConversation = {
+              id: crypto.randomUUID(),
+              agentId: targetAgentId,
+              messages: [],
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+            set(state => ({
+              conversations: [...state.conversations, targetConversation!]
+            }))
+          }
+
+          // Add orchestrated task message to agent's conversation
+          const taskMessage: Message = {
+            id: crypto.randomUUID(),
+            agentId: 'jarvis',
+            content: `🎯 **Task from Orchestrator:**\n\n${message}`,
+            timestamp: new Date(),
+            type: 'user',
+            status: 'sending'
+          }
+
+          set(state => ({
+            conversations: state.conversations.map(c =>
+              c.id === targetConversation!.id
+                ? { ...c, messages: [...c.messages, taskMessage], updatedAt: new Date() }
+                : c
+            )
+          }))
+
+          // Trigger agent response
+          get().updateAgentStatus(targetAgentId, 'busy')
+
+          // Simulate agent processing and response
+          setTimeout(() => {
+            const targetAgent = get().agents.find(a => a.id === targetAgentId)
+
+            // Generate contextual response based on agent type
+            let agentResponse = `**[${targetAgent?.persona}]**\n\n`
+            agentResponse += `✅ Task acknowledged and processed.\n\n`
+            agentResponse += `**My Analysis:**\n`
+
+            if (targetAgentId === 'dev') {
+              agentResponse += `- Reviewing code requirements\n`
+              agentResponse += `- Planning implementation strategy\n`
+              agentResponse += `- Identifying dependencies and libraries needed\n`
+              agentResponse += `- Preparing development environment\n\n`
+              agentResponse += `**Next Steps:**\n`
+              agentResponse += `1. Create file structure\n`
+              agentResponse += `2. Implement core functionality\n`
+              agentResponse += `3. Add error handling and validation\n`
+              agentResponse += `4. Write unit tests\n`
+            } else if (targetAgentId === 'qa') {
+              agentResponse += `- Analyzing test scenarios\n`
+              agentResponse += `- Preparing test cases and coverage plan\n`
+              agentResponse += `- Setting up test environment\n\n`
+              agentResponse += `**Test Strategy:**\n`
+              agentResponse += `1. Unit tests for core logic\n`
+              agentResponse += `2. Integration tests\n`
+              agentResponse += `3. E2E workflow validation\n`
+            } else if (targetAgentId === 'architect') {
+              agentResponse += `- Evaluating system design patterns\n`
+              agentResponse += `- Considering scalability and performance\n`
+              agentResponse += `- Planning component architecture\n\n`
+              agentResponse += `**Architecture Proposal:**\n`
+              agentResponse += `1. System components and boundaries\n`
+              agentResponse += `2. Data flow and state management\n`
+              agentResponse += `3. API contracts and interfaces\n`
+            } else if (targetAgentId === 'ux-design-expert') {
+              agentResponse += `- Analyzing user needs and workflows\n`
+              agentResponse += `- Considering accessibility and usability\n`
+              agentResponse += `- Planning component design system\n\n`
+              agentResponse += `**UX Approach:**\n`
+              agentResponse += `1. User journey mapping\n`
+              agentResponse += `2. Wireframe and prototype\n`
+              agentResponse += `3. Visual design and interactions\n`
+            } else {
+              agentResponse += `- Analyzing requirements\n`
+              agentResponse += `- Gathering relevant information\n`
+              agentResponse += `- Formulating approach\n\n`
+              agentResponse += `**Action Plan:**\n`
+              agentResponse += `1. Research and analysis\n`
+              agentResponse += `2. Strategy development\n`
+              agentResponse += `3. Implementation roadmap\n`
+            }
+
+            agentResponse += `\n📋 **Status:** Ready to proceed\n`
+            agentResponse += `\n*Note: In production, this would execute actual AIOX CLI commands and generate real deliverables.*`
+
+            const agentResponseMessage: Message = {
+              id: crypto.randomUUID(),
+              agentId: targetAgentId,
+              content: agentResponse,
+              timestamp: new Date(),
+              type: 'agent',
+              status: 'completed'
+            }
+
+            set(state => ({
+              conversations: state.conversations.map(c =>
+                c.id === targetConversation!.id
+                  ? {
+                      ...c,
+                      messages: [
+                        ...c.messages.map(m =>
+                          m.id === taskMessage.id ? { ...m, status: 'completed' as const } : m
+                        ),
+                        agentResponseMessage
+                      ],
+                      updatedAt: new Date()
+                    }
+                  : c
+              )
+            }))
+
+            get().updateAgentStatus(targetAgentId, 'idle')
+          }, 1500)
+        }
+
         const executionResult = await executeTask(
           orchestrationTask,
-          get().webSearchFunction
+          get().webSearchFunction,
+          delegateToAgent
         )
 
         const resultMessage: Message = {

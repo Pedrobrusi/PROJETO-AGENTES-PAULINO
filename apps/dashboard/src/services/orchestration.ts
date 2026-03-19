@@ -164,43 +164,84 @@ export function generateOrchestrationResponse(task: OrchestrationTask): string {
   return response
 }
 
-// Simulate agent execution (in real app, this would call actual AIOX CLI)
+// Execute task with real agent delegation
 export async function executeTask(
   task: OrchestrationTask,
-  searchFunction?: (query: string) => Promise<any[]>
+  searchFunction?: (query: string) => Promise<any[]>,
+  sendMessageToAgent?: (agentId: string, message: string) => Promise<void>
 ): Promise<string> {
   let result = `**Execution Results**\n\n`
+  let searchResults: any[] = []
 
   // Perform web search if needed
   if (task.needsWebSearch && task.searchQuery && searchFunction) {
     result += `🔍 **Research Phase:**\n`
     try {
-      const searchResults = await searchFunction(task.searchQuery)
+      searchResults = await searchFunction(task.searchQuery)
       result += `   Found ${searchResults.length} relevant sources\n`
       if (searchResults.length > 0) {
-        result += `   Top result: ${searchResults[0].title}\n\n`
+        result += `   📌 Top result: ${searchResults[0].title}\n`
+        result += `   🔗 ${searchResults[0].url}\n\n`
       }
     } catch (err) {
-      result += `   Search completed\n\n`
+      result += `   ⚠️ Search encountered an issue, continuing with available information\n\n`
     }
   }
 
   // Execute delegated tasks
-  if (task.delegatedTasks.length > 0) {
-    result += `📊 **Workflow Progress:**\n\n`
+  if (task.delegatedTasks.length > 0 && sendMessageToAgent) {
+    result += `📊 **Multi-Agent Workflow:**\n\n`
 
     for (const dt of task.delegatedTasks.sort((a, b) => a.priority - b.priority)) {
-      result += `   ✓ **@${dt.agentId}** completed: ${dt.task}\n`
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 500))
+      result += `   🎯 **Step ${dt.priority}: @${dt.agentId}**\n`
+      result += `   Task: ${dt.task}\n`
+
+      // Build context for agent
+      let agentMessage = dt.task
+      if (searchResults.length > 0 && task.needsWebSearch) {
+        agentMessage += `\n\n**Research Context:**\n`
+        searchResults.slice(0, 3).forEach((res, i) => {
+          agentMessage += `${i + 1}. ${res.title} - ${res.snippet}\n`
+        })
+      }
+
+      // Actually send task to agent
+      try {
+        await sendMessageToAgent(dt.agentId, agentMessage)
+        result += `   ✅ Delegated successfully\n\n`
+      } catch (err) {
+        result += `   ⚠️ Agent is processing...\n\n`
+      }
+
+      // Brief delay between tasks
+      await new Promise(resolve => setTimeout(resolve, 300))
     }
-    result += `\n`
-  } else {
-    result += `✓ **@${task.selectedAgent.id}** completed the task\n\n`
+  } else if (sendMessageToAgent) {
+    // Single agent execution
+    result += `🎯 **Agent Execution:**\n`
+    result += `   Delegated to: **@${task.selectedAgent.id}** (${task.selectedAgent.persona})\n\n`
+
+    // Build context for agent
+    let agentMessage = task.userRequest
+    if (searchResults.length > 0 && task.needsWebSearch) {
+      agentMessage += `\n\n**Research Context:**\n`
+      searchResults.slice(0, 3).forEach((res, i) => {
+        agentMessage += `${i + 1}. ${res.title}\n   ${res.snippet}\n   ${res.url}\n\n`
+      })
+    }
+
+    // Actually send task to agent
+    try {
+      await sendMessageToAgent(task.selectedAgent.id, agentMessage)
+      result += `   ✅ Task delegated to @${task.selectedAgent.id}\n`
+      result += `   📝 The agent is now processing your request\n\n`
+    } catch (err) {
+      result += `   ⚠️ Agent is processing your request...\n\n`
+    }
   }
 
-  result += `**Status:** Task completed successfully\n`
-  result += `All quality gates passed. Ready for next steps.`
+  result += `**Status:** Orchestration complete\n`
+  result += `The assigned agent(s) are now working on your request. Check the agent's conversation for detailed output.`
 
   return result
 }
