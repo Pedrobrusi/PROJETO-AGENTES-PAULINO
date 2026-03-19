@@ -11,7 +11,9 @@
       "Bash(node -e:*)",
       "Bash(npm install)",
       "Bash(npx aiox-core install)",
-      "Bash(git remote set-url origin https://github.com/Pedrobrusi/PROJETO-AGENTES-PAULINO.git)"
+      "Bash(git remote set-url origin https://github.com/Pedrobrusi/PROJETO-AGENTES-PAULINO.git)",
+      "Bash(npm run dev)",
+      "Bash(timeout 5 bash -c 'while true; do sleep 1; done')"
     ]
   }
 }
