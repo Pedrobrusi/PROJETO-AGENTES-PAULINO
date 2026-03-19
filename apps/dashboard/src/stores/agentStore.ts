@@ -184,7 +184,7 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
           get().updateAgentStatus(targetAgentId, 'busy')
 
           // Simulate agent processing and response
-          setTimeout(() => {
+          setTimeout(async () => {
             const targetAgent = get().agents.find(a => a.id === targetAgentId)
 
             // Check if this is a request to build an app

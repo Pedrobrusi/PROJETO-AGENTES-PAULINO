@@ -16,7 +16,9 @@
       "Bash(timeout 5 bash -c 'while true; do sleep 1; done')",
       "Bash(git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git ui-ux-temp)",
       "Bash(git rm --cached -r ui-ux-temp)",
-      "Bash(git rm --cached -rf ui-ux-temp)"
+      "Bash(git rm --cached -rf ui-ux-temp)",
+      "Bash(npm install express cors concurrently)",
+      "Bash(npm run server)"
     ]
   }
 }
