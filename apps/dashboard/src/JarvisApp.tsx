@@ -65,66 +65,66 @@ function JarvisApp() {
       {/* Main Container */}
       <div className="relative z-10 w-full h-full flex flex-col">
         {/* Header */}
-        <header className="jarvis-panel m-4 p-6 jarvis-slide-in-left">
+        <header className="jarvis-panel m-6 p-6 jarvis-slide-in-left">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="jarvis-circle jarvis-glow-strong w-16 h-16 flex items-center justify-center">
-                <Bot size={32} className="text-sky-400" />
+            <div className="flex items-center gap-5">
+              <div className="jarvis-circle w-14 h-14 flex items-center justify-center">
+                <Bot size={28} className="text-primary-600" />
               </div>
               <div>
-                <h1 className="jarvis-neon text-3xl font-bold">
-                  J.A.R.V.I.S.
+                <h1 className="text-2xl font-bold text-neutral-900">
+                  AIOX Orchestrator
                 </h1>
-                <p className="text-slate-400 text-sm">
-                  Just A Rather Very Intelligent System
+                <p className="text-neutral-500 text-sm font-medium">
+                  Agent Management System
                 </p>
               </div>
             </div>
 
             {/* System Status */}
-            <div className="flex gap-6">
+            <div className="flex gap-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-400">
+                <div className="text-2xl font-bold text-success">
                   {getStatusCount('idle')}
                 </div>
-                <div className="text-xs text-slate-400">Available</div>
+                <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">Available</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">
+                <div className="text-2xl font-bold text-warning">
                   {getStatusCount('busy')}
                 </div>
-                <div className="text-xs text-slate-400">Busy</div>
+                <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">Active</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-sky-400">
+                <div className="text-2xl font-bold text-primary-600">
                   {agents.length}
                 </div>
-                <div className="text-xs text-slate-400">Total</div>
+                <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">Total</div>
               </div>
             </div>
           </div>
         </header>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex gap-4 px-4 pb-4 overflow-hidden">
+        <div className="flex-1 flex gap-6 px-6 pb-6 overflow-hidden">
           {/* Left Sidebar - Voice Control & Navigation */}
-          <aside className="w-80 flex flex-col gap-4 jarvis-slide-in-left">
+          <aside className="w-80 flex flex-col gap-5 jarvis-slide-in-left">
             {/* Voice Control */}
             <VoiceControl onCommand={handleVoiceCommand} />
 
             {/* Navigation */}
-            <nav className="jarvis-panel p-4 flex-1">
-              <h3 className="jarvis-text-glow font-bold text-sm mb-4 uppercase tracking-wider">
+            <nav className="jarvis-panel p-5 flex-1">
+              <h3 className="text-sm font-semibold text-neutral-700 mb-4 uppercase tracking-wider">
                 Control Center
               </h3>
               <div className="space-y-2">
                 <button
                   onClick={() => setActiveView('orchestrator')}
                   className={`
-                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all font-medium
                     ${activeView === 'orchestrator'
-                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
-                      : 'text-slate-400 hover:bg-slate-800/50'
+                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : 'text-neutral-600 hover:bg-neutral-100 border border-transparent'
                     }
                   `}
                 >
@@ -135,10 +135,10 @@ function JarvisApp() {
                 <button
                   onClick={() => setActiveView('agents')}
                   className={`
-                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all font-medium
                     ${activeView === 'agents'
-                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
-                      : 'text-slate-400 hover:bg-slate-800/50'
+                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : 'text-neutral-600 hover:bg-neutral-100 border border-transparent'
                     }
                   `}
                 >
@@ -149,10 +149,10 @@ function JarvisApp() {
                 <button
                   onClick={() => setActiveView('tasks')}
                   className={`
-                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all font-medium
                     ${activeView === 'tasks'
-                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
-                      : 'text-slate-400 hover:bg-slate-800/50'
+                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : 'text-neutral-600 hover:bg-neutral-100 border border-transparent'
                     }
                   `}
                 >
@@ -163,10 +163,10 @@ function JarvisApp() {
                 <button
                   onClick={() => setActiveView('search')}
                   className={`
-                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all font-medium
                     ${activeView === 'search'
-                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
-                      : 'text-slate-400 hover:bg-slate-800/50'
+                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : 'text-neutral-600 hover:bg-neutral-100 border border-transparent'
                     }
                   `}
                 >
@@ -177,10 +177,10 @@ function JarvisApp() {
                 <button
                   onClick={() => setActiveView('preview')}
                   className={`
-                    w-full flex items-center gap-3 p-3 rounded-lg transition-all
+                    w-full flex items-center gap-3 p-3 rounded-lg transition-all font-medium
                     ${activeView === 'preview'
-                      ? 'jarvis-glow bg-sky-500/20 text-sky-400'
-                      : 'text-slate-400 hover:bg-slate-800/50'
+                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : 'text-neutral-600 hover:bg-neutral-100 border border-transparent'
                     }
                   `}
                 >
@@ -190,9 +190,9 @@ function JarvisApp() {
               </div>
 
               {/* Agent Status List */}
-              <div className="mt-6">
-                <h4 className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-                  Agent Status
+              <div className="mt-8 pt-6 border-t border-neutral-200">
+                <h4 className="text-xs font-semibold text-neutral-600 uppercase tracking-wider mb-3">
+                  Active Agents
                 </h4>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {otherAgents.map(agent => (
@@ -202,18 +202,18 @@ function JarvisApp() {
                         selectAgent(agent.id)
                         setActiveView('agents')
                       }}
-                      className="w-full flex items-center gap-3 p-2 rounded hover:bg-slate-800/50 transition-all group"
+                      className="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-neutral-100 transition-all group"
                     >
                       <div className={`
                         w-2 h-2 rounded-full
-                        ${agent.status === 'idle' ? 'bg-green-400' :
-                          agent.status === 'busy' ? 'bg-yellow-400 animate-pulse' :
-                          'bg-gray-400'}
+                        ${agent.status === 'idle' ? 'bg-success' :
+                          agent.status === 'busy' ? 'bg-warning animate-pulse' :
+                          'bg-neutral-400'}
                       `} />
-                      <span className="text-xs flex-1 text-left text-slate-400 group-hover:text-sky-400">
+                      <span className="text-sm flex-1 text-left text-neutral-700 font-medium group-hover:text-primary-700">
                         {agent.name}
                       </span>
-                      <span className="text-xl">{agent.icon}</span>
+                      <span className="text-lg">{agent.icon}</span>
                     </button>
                   ))}
                 </div>
@@ -238,7 +238,7 @@ function JarvisApp() {
 
             {activeView === 'agents' && (
               <div className="jarvis-panel p-6 overflow-auto h-full">
-                <h2 className="jarvis-text-glow text-2xl font-bold mb-6">
+                <h2 className="text-2xl font-bold text-neutral-900 mb-6">
                   Agent Network
                 </h2>
 
@@ -259,36 +259,39 @@ function JarvisApp() {
                         className="jarvis-card cursor-pointer"
                         style={{ animationDelay: `${index * 0.1}s` }}
                       >
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="flex items-center gap-3 mb-4">
                           <div className={`
-                            w-12 h-12 rounded-full flex items-center justify-center text-2xl
-                            jarvis-glow
-                          `} style={{ backgroundColor: `${agent.color}20` }}>
+                            w-12 h-12 rounded-lg flex items-center justify-center text-2xl border-2
+                          `} style={{
+                            backgroundColor: `${agent.color}15`,
+                            borderColor: `${agent.color}30`
+                          }}>
                             {agent.icon}
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-bold text-slate-200">{agent.name}</h3>
-                            <p className="text-xs text-slate-400">{agent.persona}</p>
+                            <h3 className="font-semibold text-neutral-900">{agent.name}</h3>
+                            <p className="text-xs text-neutral-500 font-medium">{agent.persona}</p>
                           </div>
                           <div className={`
                             w-3 h-3 rounded-full
-                            ${agent.status === 'idle' ? 'bg-green-400' :
-                              agent.status === 'busy' ? 'bg-yellow-400 animate-pulse' :
-                              'bg-gray-400'}
+                            ${agent.status === 'idle' ? 'bg-success' :
+                              agent.status === 'busy' ? 'bg-warning animate-pulse' :
+                              'bg-neutral-400'}
                           `} />
                         </div>
 
-                        <p className="text-sm text-slate-300 mb-3">
+                        <p className="text-sm text-neutral-700 mb-4 leading-relaxed">
                           {agent.description}
                         </p>
 
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-2">
                           {agent.expertise.slice(0, 3).map(skill => (
                             <span
                               key={skill}
-                              className="px-2 py-1 text-xs rounded"
+                              className="px-3 py-1.5 text-xs font-medium rounded-md border"
                               style={{
-                                backgroundColor: `${agent.color}15`,
+                                backgroundColor: `${agent.color}10`,
+                                borderColor: `${agent.color}30`,
                                 color: agent.color
                               }}
                             >
@@ -305,14 +308,14 @@ function JarvisApp() {
 
             {activeView === 'tasks' && (
               <div className="jarvis-panel p-6 overflow-auto">
-                <h2 className="jarvis-text-glow text-2xl font-bold mb-6">
+                <h2 className="text-2xl font-bold text-neutral-900 mb-6">
                   Task Monitor
                 </h2>
-                <div className="text-center py-12">
-                  <Activity size={64} className="mx-auto mb-4 text-sky-400/30" />
-                  <p className="text-slate-400">No active tasks</p>
-                  <p className="text-sm text-slate-500 mt-2">
-                    Delegate tasks to agents through JARVIS
+                <div className="text-center py-16">
+                  <Activity size={64} className="mx-auto mb-4 text-neutral-300" />
+                  <p className="text-neutral-600 font-medium">No active tasks</p>
+                  <p className="text-sm text-neutral-500 mt-2">
+                    Delegate tasks to agents through the orchestrator
                   </p>
                 </div>
               </div>
@@ -344,58 +347,64 @@ function JarvisApp() {
           </main>
 
           {/* Right Sidebar - System Info */}
-          <aside className="w-80 flex flex-col gap-4 jarvis-slide-in-right">
+          <aside className="w-80 flex flex-col gap-5 jarvis-slide-in-right">
             {/* Quick Stats */}
-            <div className="jarvis-panel p-4">
-              <h3 className="jarvis-text-glow font-bold text-sm mb-4 uppercase tracking-wider">
-                System Stats
+            <div className="jarvis-panel p-5">
+              <h3 className="text-sm font-semibold text-neutral-700 mb-5 uppercase tracking-wider">
+                System Metrics
               </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">CPU Usage</span>
-                  <span className="text-sky-400 font-mono">12%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-sky-500 to-cyan-500 jarvis-glow" style={{ width: '12%' }} />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">Memory</span>
-                  <span className="text-sky-400 font-mono">45%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-sky-500 to-cyan-500 jarvis-glow" style={{ width: '45%' }} />
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-neutral-600 text-sm font-medium">CPU Usage</span>
+                    <span className="text-primary-600 font-mono font-semibold text-sm">12%</span>
+                  </div>
+                  <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-primary-500 to-primary-400 transition-all" style={{ width: '12%' }} />
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">Network</span>
-                  <span className="text-green-400 font-mono flex items-center gap-1">
-                    <Zap size={12} />
-                    Online
-                  </span>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-neutral-600 text-sm font-medium">Memory</span>
+                    <span className="text-primary-600 font-mono font-semibold text-sm">45%</span>
+                  </div>
+                  <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-primary-500 to-primary-400 transition-all" style={{ width: '45%' }} />
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-neutral-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-neutral-600 text-sm font-medium">Network Status</span>
+                    <span className="text-success font-semibold text-sm flex items-center gap-1.5">
+                      <Zap size={14} />
+                      Online
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Recent Activity */}
-            <div className="jarvis-panel p-4 flex-1 overflow-auto">
-              <h3 className="jarvis-text-glow font-bold text-sm mb-4 uppercase tracking-wider">
+            <div className="jarvis-panel p-5 flex-1 overflow-auto">
+              <h3 className="text-sm font-semibold text-neutral-700 mb-4 uppercase tracking-wider">
                 Activity Log
               </h3>
-              <div className="space-y-2 text-xs">
-                <div className="p-2 rounded bg-slate-800/50 text-slate-300">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sky-400">JARVIS</span>
-                    <span className="text-slate-500">22:35:12</span>
+              <div className="space-y-3 text-sm">
+                <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-semibold text-primary-700">Orchestrator</span>
+                    <span className="text-neutral-500 text-xs font-mono">{new Date().toLocaleTimeString()}</span>
                   </div>
-                  <p>System initialized</p>
+                  <p className="text-neutral-700">System initialized</p>
                 </div>
-                <div className="p-2 rounded bg-slate-800/50 text-slate-300">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sky-400">JARVIS</span>
-                    <span className="text-slate-500">22:35:15</span>
+                <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-semibold text-primary-700">Orchestrator</span>
+                    <span className="text-neutral-500 text-xs font-mono">{new Date().toLocaleTimeString()}</span>
                   </div>
-                  <p>All agents standing by</p>
+                  <p className="text-neutral-700">All agents ready</p>
                 </div>
               </div>
             </div>

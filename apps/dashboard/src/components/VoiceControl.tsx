@@ -37,9 +37,9 @@ export function VoiceControl({ onCommand, onResponse }: VoiceControlProps) {
 
         if (command) {
           onCommand(command)
-          speak('At your service.')
+          speak('Processing your request.')
         } else {
-          speak('Yes, how can I help you?')
+          speak('How can I help you?')
         }
 
         resetTranscript()
@@ -70,36 +70,36 @@ export function VoiceControl({ onCommand, onResponse }: VoiceControlProps) {
 
   if (!isSpeechRecognitionSupported && !isSpeechSynthesisSupported) {
     return (
-      <div className="jarvis-panel p-4 text-center">
-        <p className="text-jarvis-text-dim text-sm">
-          Controle de voz não suportado neste navegador
+      <div className="jarvis-panel p-5 text-center">
+        <p className="text-neutral-500 text-sm">
+          Voice control not supported in this browser
         </p>
       </div>
     )
   }
 
   return (
-    <div className="jarvis-panel p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="jarvis-text-glow font-bold text-lg">Voice Control</h3>
+    <div className="jarvis-panel p-5">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-semibold text-neutral-900">Voice Control</h3>
         <div className="flex items-center gap-2">
           {/* Microphone Control */}
           {isSpeechRecognitionSupported && (
             <button
               onClick={toggleListening}
               className={`
-                p-3 rounded-full transition-all duration-300
+                p-2.5 rounded-lg transition-all border
                 ${isListening
-                  ? 'jarvis-glow-strong bg-sky-500/20'
-                  : 'bg-slate-800/50 hover:bg-slate-700/50'
+                  ? 'bg-primary-50 border-primary-300 text-primary-600'
+                  : 'bg-neutral-100 border-neutral-200 text-neutral-600 hover:bg-neutral-200'
                 }
               `}
               title={isListening ? 'Stop Listening' : 'Start Listening'}
             >
               {isListening ? (
-                <Mic size={24} className="text-sky-400" />
+                <Mic size={20} />
               ) : (
-                <MicOff size={24} className="text-slate-400" />
+                <MicOff size={20} />
               )}
             </button>
           )}
@@ -109,18 +109,18 @@ export function VoiceControl({ onCommand, onResponse }: VoiceControlProps) {
             <button
               onClick={toggleSpeaking}
               className={`
-                p-3 rounded-full transition-all duration-300
+                p-2.5 rounded-lg transition-all border
                 ${isSpeaking
-                  ? 'jarvis-glow-strong bg-sky-500/20'
-                  : 'bg-slate-800/50 hover:bg-slate-700/50'
+                  ? 'bg-primary-50 border-primary-300 text-primary-600'
+                  : 'bg-neutral-100 border-neutral-200 text-neutral-600 hover:bg-neutral-200'
                 }
               `}
               title={isSpeaking ? 'Stop Speaking' : 'Speaker Active'}
             >
               {isSpeaking ? (
-                <Volume2 size={24} className="text-sky-400" />
+                <Volume2 size={20} />
               ) : (
-                <VolumeX size={24} className="text-slate-400" />
+                <VolumeX size={20} />
               )}
             </button>
           )}
@@ -130,54 +130,54 @@ export function VoiceControl({ onCommand, onResponse }: VoiceControlProps) {
       {/* Status Display */}
       <div className="space-y-3">
         {isListening && (
-          <div className="flex items-center gap-3">
-            <div className="jarvis-wave">
-              <div className="jarvis-wave-bar" style={{ height: '40%' }}></div>
-              <div className="jarvis-wave-bar" style={{ height: '60%' }}></div>
-              <div className="jarvis-wave-bar" style={{ height: '80%' }}></div>
-              <div className="jarvis-wave-bar" style={{ height: '60%' }}></div>
-              <div className="jarvis-wave-bar" style={{ height: '40%' }}></div>
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-primary-50 border border-primary-200">
+            <div className="flex items-center gap-1">
+              <div className="w-1 h-4 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+              <div className="w-1 h-6 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-1 h-8 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-1 h-6 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+              <div className="w-1 h-4 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
             </div>
-            <span className="text-sky-400 text-sm font-medium">Listening...</span>
+            <span className="text-primary-700 text-sm font-medium">Listening...</span>
           </div>
         )}
 
         {transcript && (
-          <div className="p-3 rounded bg-slate-800/50 border border-sky-500/30">
-            <p className="text-sm text-slate-300">
-              <span className="text-sky-400 font-semibold">You said:</span> {transcript}
+          <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200">
+            <p className="text-sm text-neutral-700">
+              <span className="text-primary-700 font-semibold">You said:</span> {transcript}
             </p>
           </div>
         )}
 
         {isSpeaking && (
-          <div className="flex items-center gap-3">
-            <div className="jarvis-typing">
-              <div className="jarvis-typing-dot"></div>
-              <div className="jarvis-typing-dot"></div>
-              <div className="jarvis-typing-dot"></div>
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-primary-50 border border-primary-200">
+            <div className="flex gap-1">
+              <span className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></span>
+              <span className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
+              <span className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
             </div>
-            <span className="text-sky-400 text-sm font-medium">JARVIS speaking...</span>
+            <span className="text-primary-700 text-sm font-medium">Speaking...</span>
           </div>
         )}
 
         {speechError && (
-          <div className="p-3 rounded bg-red-500/10 border border-red-500/30">
-            <p className="text-sm text-red-400">{speechError}</p>
+          <div className="p-3 rounded-lg bg-error/10 border border-error/30">
+            <p className="text-sm text-error">{speechError}</p>
           </div>
         )}
 
         {/* Instructions */}
         {!isListening && !transcript && (
-          <div className="p-4 rounded bg-slate-800/30 border border-sky-500/20">
-            <p className="text-xs text-slate-400 text-center">
+          <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200">
+            <p className="text-xs text-neutral-600 text-center leading-relaxed">
               {isSpeechRecognitionSupported ? (
                 <>
-                  Clique no microfone e diga:<br />
-                  <span className="text-sky-400 font-mono">"JARVIS, [seu comando]"</span>
+                  Click the microphone and say:<br />
+                  <span className="text-primary-700 font-semibold font-mono">"JARVIS, [your command]"</span>
                 </>
               ) : (
-                'Reconhecimento de voz não disponível'
+                'Voice recognition not available'
               )}
             </p>
           </div>
